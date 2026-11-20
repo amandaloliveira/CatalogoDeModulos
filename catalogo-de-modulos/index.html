@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitzar | Catálogo de Módulos & Repositório Interno</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Notificações Flutuantes (Toasts) -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- =========================================================
+       TELA 1: AUTENTICAÇÃO (LOGIN & REDEFINIÇÃO DE SENHA)
+  ========================================================== -->
+  <section id="auth-screen" class="auth-wrapper">
+    <div class="auth-glow auth-glow-blue"></div>
+    <div class="auth-glow auth-glow-purple"></div>
+
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="brand-logo">
+          <span class="logo-icon">&lt;/&gt;</span>
+        </div>
+        <div>
+          <h1>Bitzar <span>Modules</span></h1>
+          <p>Repositório Interno &amp; Catálogo de Reutilização</p>
+        </div>
+      </div>
+
+      <form id="login-form" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="login-username">Usuário de Rede</label>
+          <input
+            type="text"
+            id="login-username"
+            placeholder="Ex: brun.ide, bren.miya, mandi.oli"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label for="login-password">Senha</label>
+            <button type="button" id="forgot-password-btn" class="link-btn">
+              Esqueceu a senha?
+            </button>
+          </div>
+          <input
+            type="password"
+            id="login-password"
+            placeholder="Digite sua senha"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <!-- Mensagens de Login Efetuado ou Usuário/Senha Incorretos -->
+        <div id="login-feedback" class="feedback-box hidden" role="alert"></div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          Entrar no Sistema
+        </button>
+      </form>
+
+      <!-- Atalhos rápidos para testar os 3 perfis da documentação -->
+      <div class="quick-access">
+        <span class="quick-title">Acesso Rápido para Demonstração (Senha: 123456)</span>
+        <div class="quick-grid">
+          <button type="button" class="quick-chip" data-user="brun.ide" data-pass="123456">
+            <strong>Bruno Ide</strong>
+            <small class="role-tag role-admin">Administrador</small>
+          </button>
+          <button type="button" class="quick-chip" data-user="bren.miya" data-pass="123456">
+            <strong>Breno Miyata</strong>
+            <small class="role-tag role-manager">Gerente</small>
+          </button>
+          <button type="button" class="quick-chip" data-user="mandi.oli" data-pass="123456">
+            <strong>Amanda Oliveira</strong>
+            <small class="role-tag role-dev">Desenvolvedor</small>
+          </button>
+          <button type="button" class="quick-chip" data-user="hanry.gab" data-pass="123456">
+            <strong>Gabriel Hanry</strong>
+            <small class="role-tag role-dev">Desenvolvedor</small>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal: Redefinição de Senha -->
+  <div id="reset-modal" class="modal-backdrop hidden">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3>Redefinir Senha de Acesso</h3>
+        <button type="button" class="modal-close" data-close-modal="reset-modal">&times;</button>
+      </div>
+      <form id="reset-form" class="modal-body">
+        <p class="text-muted">
+          Informe seu usuário cadastrado na Bitzar para definir uma nova senha de acesso.
+        </p>
+        <div class="form-group">
+          <label for="reset-username">Usuário</label>
+          <input type="text" id="reset-username" placeholder="Ex: mandi.oli" required />
+        </div>
+        <div class="form-group">
+          <label for="reset-new-password">Nova Senha</label>
+          <input type="password" id="reset-new-password" placeholder="Mínimo 4 caracteres" required />
+        </div>
+        <div class="form-group">
+          <label for="reset-confirm-password">Confirmar Nova Senha</label>
+          <input type="password" id="reset-confirm-password" placeholder="Repita a nova senha" required />
+        </div>
+        <div id="reset-feedback" class="feedback-box hidden"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-close-modal="reset-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Nova Senha</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       APLICAÇÃO PRINCIPAL (DESKTOP LAYOUT)
+  ========================================================== -->
+  <div id="app-shell" class="app-shell hidden">
+    <!-- Menu Lateral Fixo -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo small">
+          <span class="logo-icon">&lt;/&gt;</span>
+        </div>
+        <div>
+          <h2>Bitzar</h2>
+          <span>Catálogo de Módulos</span>
+        </div>
+      </div>
+
+      <nav id="nav-menu" class="sidebar-nav">
+        <button type="button" class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">◈</span>
+          <span>Visão Geral</span>
+        </button>
+        <button type="button" class="nav-item" data-view="catalog">
+          <span class="nav-icon">◫</span>
+          <span>Catálogo de Módulos</span>
+        </button>
+        <button type="button" class="nav-item" data-view="projects">
+          <span class="nav-icon">❖</span>
+          <span>Projetos &amp; Requisitos</span>
+        </button>
+        <button type="button" class="nav-item" data-view="profile">
+          <span class="nav-icon">◉</span>
+          <span>Meu Cadastro</span>
+        </button>
+        <button type="button" class="nav-item hidden" id="nav-admin-btn" data-view="admin">
+          <span class="nav-icon">⚙</span>
+          <span>Administração</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card-mini">
+          <img id="sidebar-avatar" src="" alt="Avatar do usuário" class="avatar-sm" />
+          <div class="user-mini-info">
+            <strong id="sidebar-user-name">Usuário</strong>
+            <span id="sidebar-user-role" class="role-badge">Cargo</span>
+          </div>
+        </div>
+        <button type="button" id="logout-btn" class="btn btn-outline-danger btn-block">
+          Sair do Sistema
+        </button>
+      </div>
+    </aside>
+
+    <!-- Área de Conteúdo Principal -->
+    <main class="main-content">
+      <!-- Barra Superior -->
+      <header class="topbar">
+        <div>
+          <h1 id="page-title">Visão Geral</h1>
+          <p id="page-subtitle">Acelere entregas reutilizando componentes validados da Bitzar</p>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="search-bar">
+            <span>⌕</span>
+            <input
+              type="text"
+              id="global-search-input"
+              placeholder="Buscar módulo por nome, tecnologia ou palavra-chave..."
+            />
+          </div>
+          <div id="role-badge-topbar" class="permission-pill"></div>
+        </div>
+      </header>
+
+      <!-- =========================================================
+           VIEW 1: DASHBOARD / VISÃO GERAL
+      ========================================================== -->
+      <section id="view-dashboard" class="view-section">
+        <div class="stats-grid" id="dashboard-stats"></div>
+
+        <div class="dashboard-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Ações Permitidas para o seu Perfil</h3>
+              <span id="dashboard-role-label" class="badge badge-purple"></span>
+            </div>
+            <ul id="role-capabilities-list" class="capabilities-list"></ul>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Projetos Recentes &amp; Status</h3>
+              <button type="button" class="link-btn" data-jump-view="projects">Ver todos &rarr;</button>
+            </div>
+            <div id="dashboard-recent-projects" class="mini-list"></div>
+          </div>
+        </div>
+
+        <div class="panel mt-20">
+          <div class="panel-header">
+            <h3>Categorias Mais Utilizadas no Catálogo</h3>
+            <button type="button" class="link-btn" data-jump-view="catalog">Explorar catálogo &rarr;</button>
+          </div>
+          <div id="dashboard-categories-grid" class="category-chips-grid"></div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW 2: CATÁLOGO DE MÓDULOS (ESTILO PLANILHA + DETALHES)
+      ========================================================== -->
+      <section id="view-catalog" class="view-section hidden">
+        <div class="section-toolbar">
+          <div class="toolbar-filters">
+            <div class="filter-box">
+              <label for="category-select">1. Selecione a Categoria</label>
+              <select id="category-select"></select>
+            </div>
+            <div class="filter-box">
+              <label for="module-select">2. Selecione o Módulo</label>
+              <select id="module-select"></select>
+            </div>
+            <div class="filter-box">
+              <label for="status-filter-select">Status</label>
+              <select id="status-filter-select">
+                <option value="all">Todos os Status</option>
+                <option value="Ativo">Ativo</option>
+                <option value="Em Aprovação">Em Aprovação</option>
+                <option value="Inativo">Inativo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="toolbar-buttons">
+            <button type="button" id="btn-new-category" class="btn btn-secondary hidden">
+              + Nova Categoria
+            </button>
+            <button type="button" id="btn-new-module" class="btn btn-primary hidden">
+              + Cadastrar Módulo
+            </button>
+          </div>
+        </div>
+
+        <!-- Painel em 2 Colunas: Lista da Categoria + Ficha Completa do Módulo -->
+        <div class="catalog-workspace">
+          <!-- Coluna Esquerda: Lista de Módulos da Categoria Selecionada -->
+          <div class="panel catalog-list-panel">
+            <div class="panel-header">
+              <h3 id="selected-category-title">Módulos da Categoria</h3>
+              <span id="category-count-badge" class="badge badge-blue">0</span>
+            </div>
+            <div id="category-modules-list" class="module-selector-list"></div>
+          </div>
+
+          <!-- Coluna Direita: Ficha de Cadastro do Módulo (Espelho da Planilha) -->
+          <div class="panel catalog-detail-panel" id="module-inspector-panel">
+            <!-- Preenchido dinamicamente via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW 2B: REPOSITÓRIO DO MÓDULO (VISUALIZAÇÃO ESTILO GITHUB)
+      ========================================================== -->
+      <section id="view-repo" class="view-section hidden">
+        <div class="repo-top-bar">
+          <button type="button" id="back-to-catalog-btn" class="btn btn-ghost">
+            &larr; Voltar ao Catálogo
+          </button>
+          <div id="repo-owner-actions" class="repo-actions-group"></div>
+        </div>
+
+        <div class="github-container">
+          <!-- Cabeçalho do Repositório -->
+          <div class="gh-header">
+            <div class="gh-title-row">
+              <span class="gh-icon">📁</span>
+              <span class="gh-org">bitzar-modules</span>
+              <span class="gh-sep">/</span>
+              <span id="gh-category-slug" class="gh-cat">categoria</span>
+              <span class="gh-sep">/</span>
+              <strong id="gh-module-slug" class="gh-repo-name">modulo</strong>
+              <span id="gh-status-badge" class="status-pill">Ativo</span>
+            </div>
+            <div class="gh-meta-row">
+              <span class="gh-branch">⎇ branch: <strong>main</strong></span>
+              <span>Tecnologia: <strong id="gh-tech">Node.js</strong></span>
+              <span>Versão: <strong id="gh-version">1.0</strong></span>
+              <span>Criado por: <strong id="gh-author">Desenvolvedor</strong></span>
+            </div>
+          </div>
+
+          <!-- Corpo estilo GitHub: Árvore de Pastas + Visualizador de Código -->
+          <div class="gh-code-layout">
+            <div class="gh-file-tree">
+              <div class="gh-tree-header">
+                <span>Arquivos do Módulo</span>
+              </div>
+              <ul id="gh-files-list" class="gh-tree-list"></ul>
+            </div>
+
+            <div class="gh-file-viewer">
+              <div class="gh-viewer-header">
+                <div class="gh-file-path">
+                  <span id="gh-active-filename">src/index.js</span>
+                  <small id="gh-file-lines">0 linhas</small>
+                </div>
+                <button type="button" id="gh-copy-code-btn" class="btn btn-sm btn-secondary">
+                  Copiar Código
+                </button>
+              </div>
+              <pre class="gh-code-block"><code id="gh-code-content"></code></pre>
+            </div>
+          </div>
+
+          <!-- Bloco README.md estilo GitHub -->
+          <div class="gh-readme-box">
+            <div class="gh-readme-header">
+              <span>📖 README.md — Documentação Oficial do Módulo</span>
+              <a id="gh-external-doc-link" href="#" target="_blank" rel="noopener noreferrer" class="link-btn">
+                Abrir Docs Externas &#8599;
+              </a>
+            </div>
+            <div id="gh-readme-body" class="gh-readme-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW 3: PROJETOS CADASTRADOS & REQUISITOS
+      ========================================================== -->
+      <section id="view-projects" class="view-section hidden">
+        <div class="section-toolbar">
+          <div class="status-tabs" id="project-status-tabs">
+            <button type="button" class="tab-btn active" data-status="all">Todos</button>
+            <button type="button" class="tab-btn" data-status="Novo Projeto">Novo Projeto</button>
+            <button type="button" class="tab-btn" data-status="Em Andamento">Em Andamento</button>
+            <button type="button" class="tab-btn" data-status="Em Avaliação">Em Avaliação</button>
+            <button type="button" class="tab-btn" data-status="Aprovado">Aprovado</button>
+            <button type="button" class="tab-btn" data-status="Reprovado">Reprovado</button>
+            <button type="button" class="tab-btn" data-status="Finalizado">Finalizado</button>
+          </div>
+
+          <button type="button" id="btn-new-project" class="btn btn-primary hidden">
+            + Novo Projeto
+          </button>
+        </div>
+
+        <div id="projects-grid" class="projects-grid"></div>
+      </section>
+
+      <!-- =========================================================
+           VIEW 4: MEU CADASTRO / PERFIL DO USUÁRIO
+      ========================================================== -->
+      <section id="view-profile" class="view-section hidden">
+        <div class="profile-layout">
+          <div class="panel profile-card">
+            <div class="profile-avatar-wrapper">
+              <img id="profile-preview-avatar" src="" alt="Foto de Perfil" class="avatar-lg" />
+              <label for="profile-photo-input" class="btn btn-sm btn-secondary mt-12">
+                Alterar Foto de Perfil
+              </label>
+              <input type="file" id="profile-photo-input" accept="image/*" class="hidden" />
+            </div>
+
+            <div class="avatar-presets">
+              <span>Ou escolha um avatar padrão:</span>
+              <div class="preset-row" id="avatar-presets-row"></div>
+            </div>
+
+            <div class="profile-role-box">
+              <span class="text-muted">Nível de Acesso Atual</span>
+              <strong id="profile-role-display" class="role-highlight">Desenvolvedor</strong>
+              <p id="profile-role-hint" class="small-note"></p>
+            </div>
+          </div>
+
+          <div class="panel profile-form-panel">
+            <div class="panel-header">
+              <h3>Informações Cadastrais</h3>
+              <span class="badge badge-blue">Dados da Conta</span>
+            </div>
+
+            <form id="profile-form" class="styled-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="prof-name">Nome Completo</label>
+                  <input type="text" id="prof-name" required />
+                </div>
+                <div class="form-group">
+                  <label for="prof-username">Usuário (Login)</label>
+                  <input type="text" id="prof-username" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="prof-email">E-mail Corporativo</label>
+                  <input type="email" id="prof-email" required />
+                </div>
+                <div class="form-group">
+                  <label for="prof-role-select">
+                    Cargo / Privilégios no Sistema
+                    <span id="role-lock-icon" title="Restrito ao Administrador">🔒</span>
+                  </label>
+                  <select id="prof-role-select">
+                    <option value="Desenvolvedor">Desenvolvedor</option>
+                    <option value="Gerente">Gerente</option>
+                    <option value="Administrador">Administrador</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="prof-specialty">Especialidade / Stack Principal</label>
+                  <input type="text" id="prof-specialty" placeholder="Ex: Node.js, PostgreSQL, React" />
+                </div>
+                <div class="form-group">
+                  <label for="prof-password">Nova Senha (deixe em branco para manter)</label>
+                  <input type="password" id="prof-password" placeholder="••••••••" />
+                </div>
+              </div>
+
+              <div id="profile-permission-alert" class="info-banner"></div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Salvar Alterações do Cadastro</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           VIEW 5: PAINEL ADMINISTRATIVO (APENAS ADMINISTRADOR)
+      ========================================================== -->
+      <section id="view-admin" class="view-section hidden">
+        <div class="admin-grid">
+          <!-- Gerenciamento de Usuários e Privilégios -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Gerenciamento de Usuários &amp; Privilégios</h3>
+              <span class="badge badge-purple">Controle RBAC</span>
+            </div>
+            <p class="text-muted mb-16">
+              Como Administrador, você pode promover, rebaixar ou ativar/desativar contas de colaboradores.
+            </p>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Profissional</th>
+                    <th>Usuário</th>
+                    <th>Cargo / Privilégio</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Fila de Aprovação de Módulos & Categorias -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Aprovação de Módulos &amp; Categorias</h3>
+              <button type="button" id="admin-add-cat-btn" class="btn btn-sm btn-primary">
+                + Categoria
+              </button>
+            </div>
+            <div id="admin-pending-modules" class="mini-list"></div>
+
+            <hr class="divider" />
+            <h4 class="mb-12">Categorias Cadastradas (<span id="admin-cat-total">0</span>)</h4>
+            <div id="admin-categories-list" class="category-chips-grid"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- =========================================================
+       MODAIS DE CADASTRO / EDIÇÃO / DETALHES
+  ========================================================== -->
+
+  <!-- Modal: Cadastrar ou Editar Módulo -->
+  <div id="module-form-modal" class="modal-backdrop hidden">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <h3 id="module-modal-title">Cadastrar Novo Módulo</h3>
+        <button type="button" class="modal-close" data-close-modal="module-form-modal">&times;</button>
+      </div>
+      <form id="module-form" class="modal-body">
+        <input type="hidden" id="mod-edit-id" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="mod-name">Nome do Módulo *</label>
+            <input type="text" id="mod-name" placeholder="Ex: Autenticação JWT" required />
+          </div>
+          <div class="form-group">
+            <label for="mod-category">Categoria *</label>
+            <select id="mod-category" required></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="mod-description">Descrição Funcional *</label>
+          <textarea id="mod-description" rows="2" placeholder="Descreva o que este módulo resolve..." required></textarea>
+        </div>
+
+        <div class="form-row three-cols">
+          <div class="form-group">
+            <label for="mod-tech">Tecnologia *</label>
+            <input type="text" id="mod-tech" placeholder="Ex: Node.js, PostgreSQL" required />
+          </div>
+          <div class="form-group">
+            <label for="mod-version">Versão *</label>
+            <input type="text" id="mod-version" placeholder="Ex: 1.0.0" required />
+          </div>
+          <div class="form-group">
+            <label for="mod-status">Status</label>
+            <select id="mod-status">
+              <option value="Em Aprovação">Em Aprovação</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="mod-link">Link do Repositório / Código</label>
+            <input type="url" id="mod-link" placeholder="https://github.com/bitzar/..." />
+          </div>
+          <div class="form-group">
+            <label for="mod-doc-link">Link da Documentação Externa</label>
+            <input type="url" id="mod-doc-link" placeholder="https://..." />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="mod-dependencies">Dependências &amp; Requisitos Técnicos</label>
+          <input type="text" id="mod-dependencies" placeholder="Ex: jsonwebtoken@^9.0.0, dotenv" />
+        </div>
+
+        <div class="form-group">
+          <label for="mod-code">Código Principal (src/index.js)</label>
+          <textarea id="mod-code" rows="6" class="code-input" placeholder="// Cole aqui o código-fonte principal do módulo..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="mod-readme">Documentação Interna (README.md)</label>
+          <textarea id="mod-readme" rows="4" placeholder="# Nome do Módulo&#10;Instruções de instalação e exemplo de uso..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-close-modal="module-form-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Módulo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Cadastrar Novo Projeto (Gerente / Admin) -->
+  <div id="project-form-modal" class="modal-backdrop hidden">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <h3>Cadastrar Novo Projeto (Orçamento Fechado)</h3>
+        <button type="button" class="modal-close" data-close-modal="project-form-modal">&times;</button>
+      </div>
+      <form id="project-form" class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="proj-name">Nome do Projeto *</label>
+            <input type="text" id="proj-name" placeholder="Ex: Portal E-commerce NovaShop" required />
+          </div>
+          <div class="form-group">
+            <label for="proj-client">Empresa Cliente *</label>
+            <input type="text" id="proj-client" placeholder="Ex: NovaShop Varejo Ltda" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="proj-description">Descrição do Projeto *</label>
+          <textarea id="proj-description" rows="2" placeholder="Escopo geral do sistema a ser desenvolvido..." required></textarea>
+        </div>
+
+        <div class="form-row three-cols">
+          <div class="form-group">
+            <label for="proj-status">Status Inicial</label>
+            <select id="proj-status">
+              <option value="Novo Projeto">Novo Projeto</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Em Avaliação">Em Avaliação</option>
+              <option value="Aprovado">Aprovado</option>
+              <option value="Reprovado">Reprovado</option>
+              <option value="Finalizado">Finalizado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="proj-start-date">Data de Inclusão *</label>
+            <input type="date" id="proj-start-date" required />
+          </div>
+          <div class="form-group">
+            <label for="proj-end-date">Previsão / Finalização</label>
+            <input type="date" id="proj-end-date" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="proj-requirements">
+            Requisitos / Palavras-chave (separe por vírgula — o sistema sugerirá módulos automaticamente!)
+          </label>
+          <input
+            type="text"
+            id="proj-requirements"
+            placeholder="Ex: login, pix, pagamento, e-mail, upload, relatórios"
+            required
+          />
+        </div>
+
+        <!-- Sugestão Automática em Tempo Real -->
+        <div class="suggestion-engine-box">
+          <div class="suggestion-header">
+            <span>⚡ Motor de Sugestão Inteligente — Módulos Compatíveis Encontrados:</span>
+          </div>
+          <div id="live-module-suggestions" class="suggestion-chips">
+            <small class="text-muted">Digite os requisitos acima para ver módulos compatíveis do catálogo...</small>
+          </div>
+        </div>
+
+        <div class="form-group mt-12">
+          <label>Usuários Colaboradores Alocados</label>
+          <div id="proj-collaborators-checkboxes" class="collab-checkbox-grid"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-close-modal="project-form-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Criar Projeto &amp; Vincular Módulos</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Detalhes Completos do Projeto -->
+  <div id="project-detail-modal" class="modal-backdrop hidden">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <div>
+          <h3 id="detail-proj-title">Detalhes do Projeto</h3>
+          <small id="detail-proj-client" class="text-muted"></small>
+        </div>
+        <button type="button" class="modal-close" data-close-modal="project-detail-modal">&times;</button>
+      </div>
+      <div id="project-detail-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Nova Categoria (Administrador) -->
+  <div id="category-form-modal" class="modal-backdrop hidden">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3>Criar Nova Categoria</h3>
+        <button type="button" class="modal-close" data-close-modal="category-form-modal">&times;</button>
+      </div>
+      <form id="category-form" class="modal-body">
+        <div class="form-group">
+          <label for="new-category-name">Nome da Categoria</label>
+          <input type="text" id="new-category-name" placeholder="Ex: Inteligência Artificial" required />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" data-close-modal="category-form-modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Criar Categoria</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
